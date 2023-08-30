@@ -2,10 +2,10 @@ package com.example.catalisa.desafio3.model.factory;
 
 public class EstoqueFactory {
 
-    public Calculo operacao(String operacao){
-        if(operacao.equalsIgnoreCase("compra")){
+    public Calculo operacao(String tipoPedido){
+        if(tipoPedido.equalsIgnoreCase("compra")){
             return new CalculoCompra();
-        } else if (operacao.equalsIgnoreCase("venda")) {
+        } else if (tipoPedido.equalsIgnoreCase("venda")) {
             return new CalculoVenda();
         }else{
             return null;

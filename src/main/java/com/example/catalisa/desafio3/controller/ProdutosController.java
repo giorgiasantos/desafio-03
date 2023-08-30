@@ -2,6 +2,8 @@ package com.example.catalisa.desafio3.controller;
 
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
+import com.example.catalisa.desafio3.model.dto.ProdutosDTOView;
+import com.example.catalisa.desafio3.model.factory.EstoqueFactory;
 import com.example.catalisa.desafio3.service.ProdutosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,7 @@ public class ProdutosController {
 
     //ENDPOINTS GET
     @GetMapping
-    public List<ProdutosDTO> listarProdutos(){
+    public List<ProdutosDTOView> listarProdutos(){
         return produtosService.getAll();
     }
 
@@ -48,16 +50,16 @@ public class ProdutosController {
     }
     //ENDPOINT POST
     @PostMapping
-    public ResponseEntity<ProdutosDTO> cadastrarProduto(@RequestBody ProdutosDTO produtosDTO){
-        ProdutosDTO novoProduto = produtosService.cadastrar(produtosDTO);
+    public ResponseEntity<ProdutosDTO> cadastrarProduto(@RequestBody ProdutosDTO produtosDTO, EstoqueFactory estoqueFactory){
+        ProdutosDTO novoProduto = produtosService.cadastrar(produtosDTO, estoqueFactory);
         return ResponseEntity.ok().body(novoProduto);
     }
 
     //ENDPOINT PUT
     @PutMapping(path = "/{id}")
-    public ResponseEntity<ProdutosModel> alterarProduto(@PathVariable Long id, @RequestBody ProdutosModel produtosModel){
+    public ResponseEntity<ProdutosModel> alterarProduto(@PathVariable Long id, @RequestBody ProdutosModel produtosModel, EstoqueFactory estoqueFactory){
 
-        ProdutosModel produtoAlterado = produtosService.alterar(id,produtosModel);
+        ProdutosModel produtoAlterado = produtosService.alterar(id,produtosModel,estoqueFactory);
 
         if(produtoAlterado != null){
             return ResponseEntity.ok().body(produtoAlterado);

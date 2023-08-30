@@ -2,6 +2,8 @@ package com.example.catalisa.desafio3.service;
 
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
+import com.example.catalisa.desafio3.model.dto.ProdutosDTOView;
+import com.example.catalisa.desafio3.model.factory.EstoqueFactory;
 import com.example.catalisa.desafio3.repository.ProdutosRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,25 +25,13 @@ public class ProdutosService {
     @Autowired
     private ProdutosRepository produtosRepository;
 
-
-    //ATUALIZAÇÃO DO ESTOQUE
-    public void atualizarQtdeProsduto(Long id, int quantidadeProduto){
-        ProdutosModel produto = produtosRepository.findById(id).orElse(null);
-
-        if(produto != null){
-            int quantidadeAtualizada = produto.getQuantidadeEstoque() - quantidadeProduto;
-            produto.setQuantidadeEstoque(quantidadeAtualizada);
-            produtosRepository.save(produto);
-        }
-    }
-
     //LISTAR TODOS OS PRODUTOS CADASTRADOS
-    public List<ProdutosDTO> getAll(){
+    public List<ProdutosDTOView> getAll(){
         List<ProdutosModel> produtos = produtosRepository.findAll();
-        List<ProdutosDTO> produtosDTO = new ArrayList<>();
+        List<ProdutosDTOView> produtosDTO = new ArrayList<>();
 
         for(ProdutosModel produto : produtos){
-            produtosDTO.add(new ProdutosDTO(produto));
+            produtosDTO.add(new ProdutosDTOView(produto));
         }
 
         return produtosDTO;
@@ -68,13 +58,19 @@ public class ProdutosService {
     }
 
     // CADASTRAR UM PRODUTO
-    public ProdutosDTO cadastrar(ProdutosDTO produtosDTO){
+    public ProdutosDTO cadastrar(ProdutosDTO produtosDTO, EstoqueFactory estoqueFactory){
+
         ProdutosModel novoProduto = produtosRepository.save(produtosDTO.toProdutosModel());
+
+        int quantidadeEstoque = estoqueFactory.operacao(novoProduto.getTipoPedido())
+                .calcularEstoque(novoProduto.getQuantidadeEstoque(),novoProduto.getQuantidadeOperacao());
+        novoProduto.setQuantidadeEstoque(quantidadeEstoque);
+
         return new ProdutosDTO(novoProduto);
     }
 
     // ATUALIZAR UM PRODUTO JÁ CADASTRADO
-    public ProdutosModel alterar(Long id, ProdutosModel produtosModel){
+    public ProdutosModel alterar(Long id, ProdutosModel produtosModel, EstoqueFactory estoqueFactory){
 
         ProdutosModel produto = produtosRepository.findById(id).get();
 
@@ -89,6 +85,15 @@ public class ProdutosService {
         }
         if(produto != null){
             produto.setQuantidadeEstoque(produtosModel.getQuantidadeEstoque());
+        }
+        if(produto != null){
+            produto.setQuantidadeOperacao(produtosModel.getQuantidadeOperacao());
+        }
+        if(produto != null){
+            produto.setTipoPedido(produtosModel.getTipoPedido());
+            int qtdeEstoque = estoqueFactory.operacao(produtosModel.getTipoPedido())
+                    .calcularEstoque(produtosModel.getQuantidadeEstoque(),produtosModel.getQuantidadeOperacao());
+            produto.setQuantidadeEstoque(qtdeEstoque);
         }
         if(produto != null){
             produto.setDescricao(produtosModel.getDescricao());
