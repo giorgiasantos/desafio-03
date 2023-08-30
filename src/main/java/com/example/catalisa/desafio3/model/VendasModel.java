@@ -34,6 +34,9 @@ public class VendasModel {
     @Email
     private String emailCliente;
 
+    @Column(length = 6, nullable = false)
+    private String operacao;
+
     @ManyToOne
     @JoinColumn(name = "produtoId", referencedColumnName = "id", insertable = false, updatable = false)
     private ProdutosModel produto;

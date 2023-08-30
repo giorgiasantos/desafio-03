@@ -3,6 +3,10 @@ package com.example.catalisa.desafio3.service;
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
 import com.example.catalisa.desafio3.repository.ProdutosRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -10,10 +14,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProdutosService {
 
     @Autowired
     private ProdutosRepository produtosRepository;
+
+
+    //ATUALIZAÇÃO DO ESTOQUE
+    public void atualizarQtdeProsduto(Long id, int quantidadeProduto){
+        ProdutosModel produto = produtosRepository.findById(id).orElse(null);
+
+        if(produto != null){
+            int quantidadeAtualizada = produto.getQuantidadeEstoque() - quantidadeProduto;
+            produto.setQuantidadeEstoque(quantidadeAtualizada);
+            produtosRepository.save(produto);
+        }
+    }
 
     //LISTAR TODOS OS PRODUTOS CADASTRADOS
     public List<ProdutosDTO> getAll(){

@@ -41,4 +41,7 @@ public class ProdutosModel {
     @Column(length = 10, nullable = false)
     private LocalDate dataRegistro;
 
+    @Column(length = 6, nullable = false)
+    private String operacao;
+
 }

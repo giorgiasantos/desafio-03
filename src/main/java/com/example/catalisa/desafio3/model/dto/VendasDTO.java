@@ -19,6 +19,7 @@ public class VendasDTO implements Serializable {
     private LocalDate dataVenda;
     private String nomeCliente;
     private String emailCliente;
+    private String operacao;
     private ProdutosModel produto;
     private Long produtoId;
 
@@ -28,6 +29,7 @@ public class VendasDTO implements Serializable {
         this.dataVenda = vendasModel.getDataVenda();
         this.nomeCliente = vendasModel.getNomeCliente();
         this.emailCliente = vendasModel.getEmailCliente();
+        this.operacao = vendasModel.getOperacao();
         this.produto = vendasModel.getProduto();
         this.produtoId = vendasModel.getProdutoId();
     }
@@ -36,6 +38,6 @@ public class VendasDTO implements Serializable {
     }
 
     public VendasModel toVendasModel(){
-        return new VendasModel(id, quantidadeProduto, dataVenda,nomeCliente,emailCliente,produto, produtoId);
+        return new VendasModel(id, quantidadeProduto, dataVenda,nomeCliente,emailCliente,operacao,produto, produtoId);
     }
 }

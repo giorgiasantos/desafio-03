@@ -19,7 +19,7 @@ public class ProdutosDTO implements Serializable {
     private int quantidadeEstoque;
     private double valor;
     private LocalDate dataRegistro;
-//    private CategoriasProdutos categoria;
+    private String operacao;
 
     public ProdutosDTO(ProdutosModel produtosModel) {
         this.id = produtosModel.getId();
@@ -28,12 +28,13 @@ public class ProdutosDTO implements Serializable {
         this.quantidadeEstoque = produtosModel.getQuantidadeEstoque();
         this.valor = produtosModel.getValor();
         this.dataRegistro = produtosModel.getDataRegistro();
+        this.operacao = produtosModel.getOperacao();
     }
 
     public ProdutosDTO() {
     }
 
     public ProdutosModel toProdutosModel(){
-        return new ProdutosModel(id,nomeProduto,descricao,quantidadeEstoque, valor,dataRegistro);
+        return new ProdutosModel(id,nomeProduto,descricao,quantidadeEstoque, valor,dataRegistro,operacao);
     }
 }
