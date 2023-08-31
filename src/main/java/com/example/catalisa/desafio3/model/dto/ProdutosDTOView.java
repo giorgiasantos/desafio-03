@@ -1,7 +1,6 @@
 package com.example.catalisa.desafio3.model.dto;
 
 import com.example.catalisa.desafio3.model.ProdutosModel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -25,7 +25,7 @@ class ProdutosRepositoryTest {
     @Test
     void testeFindByNome() {
 
-        ProdutosModel produtosModel = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 0, 300, LocalDate.parse("2023-06-06"));
+        ProdutosModel produtosModel = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 300, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
         produtosRepository.save(produtosModel);
 

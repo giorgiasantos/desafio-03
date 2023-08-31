@@ -3,10 +3,6 @@ package com.example.catalisa.desafio3.service;
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTOView;
-import com.example.catalisa.desafio3.model.factory.Calculo;
-import com.example.catalisa.desafio3.model.factory.CalculoCompra;
-import com.example.catalisa.desafio3.model.factory.CalculoVenda;
-import com.example.catalisa.desafio3.model.factory.EstoqueFactory;
 import com.example.catalisa.desafio3.repository.ProdutosRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -37,7 +34,7 @@ class ProdutosServiceTest {
     @Test
     void testGetAll() throws Exception{
         List<ProdutosModel> listaMock = new ArrayList<>();
-        listaMock.add(new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 0, 300, LocalDate.parse("2023-06-06")));
+        listaMock.add(new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 300, LocalDate.parse("2023-06-06"),"João da Silva","joao@gmail.com"));
 
         when(produtosRepository.findAll()).thenReturn(listaMock);
 
@@ -54,7 +51,7 @@ class ProdutosServiceTest {
 
     @Test
     void testeGetByIdAchaId() throws Exception{
-        ProdutosModel produto = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 0, 300, LocalDate.parse("2023-06-06"));
+        ProdutosModel produto = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 300, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
         when(produtosRepository.findById(1L)).thenReturn(Optional.of(produto));
 
@@ -66,10 +63,11 @@ class ProdutosServiceTest {
         assertEquals(produto.getNomeProduto(),resultado.get().getNomeProduto());
         assertEquals(produto.getDescricao(), resultado.get().getDescricao());
         assertEquals(produto.getTipoPedido(), resultado.get().getTipoPedido());
-        assertEquals(produto.getQuantidadeOperacao(),resultado.get().getQuantidadeOperacao());
-        assertEquals(produto.getQuantidadeEstoque(), resultado.get().getQuantidadeEstoque());
+        assertEquals(produto.getQtdProduto(),resultado.get().getQtdProduto());
         assertEquals(produto.getValor(), resultado.get().getValor());
         assertEquals(produto.getDataRegistro(), resultado.get().getDataRegistro());
+        assertEquals(produto.getNomeResponsavel(), resultado.get().getNomeResponsavel());
+        assertEquals(produto.getEmailResponsavel(), resultado.get().getEmailResponsavel());
     }
 
     @Test
@@ -86,7 +84,8 @@ class ProdutosServiceTest {
 
     @Test
     void testGetByNome() throws Exception{
-        ProdutosModel produto = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 0, 300, LocalDate.parse("2023-06-06"));
+
+        ProdutosModel produto = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 300, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
         when(produtosRepository.findByNome("Jaqueta Jeans")).thenReturn(Optional.of(produto));
 
@@ -98,10 +97,11 @@ class ProdutosServiceTest {
         assertEquals(produto.getNomeProduto(),resultado.get().getNomeProduto());
         assertEquals(produto.getDescricao(), resultado.get().getDescricao());
         assertEquals(produto.getTipoPedido(), resultado.get().getTipoPedido());
-        assertEquals(produto.getQuantidadeOperacao(),resultado.get().getQuantidadeOperacao());
-        assertEquals(produto.getQuantidadeEstoque(), resultado.get().getQuantidadeEstoque());
+        assertEquals(produto.getQtdProduto(),resultado.get().getQtdProduto());
         assertEquals(produto.getValor(), resultado.get().getValor());
         assertEquals(produto.getDataRegistro(), resultado.get().getDataRegistro());
+        assertEquals(produto.getNomeResponsavel(), resultado.get().getNomeResponsavel());
+        assertEquals(produto.getEmailResponsavel(), resultado.get().getEmailResponsavel());
 
     }
 
@@ -117,39 +117,33 @@ class ProdutosServiceTest {
     }
 
     @Test
-    @Disabled
     void testCadastrar() throws Exception{
-        //mocks
-        EstoqueFactory estoqueFactory = mock(EstoqueFactory.class);
-        CalculoCompra calculoCompra = mock(CalculoCompra.class);
 
-        when(estoqueFactory.operacao("compra")).thenReturn(calculoCompra);
-        when(calculoCompra.calcularEstoque(200,100)).thenReturn(300);
+        ProdutosDTO produtosDTO = new ProdutosDTO(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",100,300.0, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
-        ProdutosDTO produtosDTO = new ProdutosDTO(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 100, 300.0, LocalDate.parse("2023-06-06"));
-
-        ProdutosDTO resultado = produtosService.cadastrar(produtosDTO,estoqueFactory);
-
-        verify(produtosRepository, times(1)).save(any(ProdutosModel.class));
-        verify(estoqueFactory,times(1)).operacao("compra");
-        verify(calculoCompra, times(1)).calcularEstoque(anyInt(), anyInt());
+        ProdutosDTO resultado = produtosService.cadastrar(produtosDTO);
 
         assertNotNull(resultado);
+        assertEquals(produtosDTO.getNomeProduto(), resultado.getNomeProduto());
+        assertEquals(produtosDTO.getDescricao(), resultado.getDescricao());
+        assertEquals(produtosDTO.getTipoPedido(),resultado.getTipoPedido());
+        assertEquals(produtosDTO.getQtdProduto(), resultado.getQtdProduto());
+        assertEquals(produtosDTO.getDataRegistro(), resultado.getDataRegistro());
+        assertEquals(produtosDTO.getNomeResponsavel(), resultado.getNomeResponsavel());
+        assertEquals(produtosDTO.getEmailResponsavel(), resultado.getEmailResponsavel());
     }
 
     @Test
-    @Disabled
     void testeAlterar() throws Exception{
-        EstoqueFactory estoqueFactory = mock(EstoqueFactory.class);
 
-        ProdutosModel produtoAntigo = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",200, 0, 300, LocalDate.parse("2023-06-06"));
+        ProdutosModel produtoAntigo = new ProdutosModel(1L,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",2, 300, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
-        ProdutosModel produtoAlterado = new ProdutosModel(null,"Jaqueta Jeans", "Jaqueta jeans oversized com bolsos laterais","compra",1, 201, 300, LocalDate.parse("2023-06-06"));
+        ProdutosModel produtoAlterado = new ProdutosModel(null,"Jaqueta Jeans Azul", "Jaqueta jeans oversized com bolsos laterais","compra",2, 300, LocalDate.parse("2023-06-06"), "João da Silva","joao@gmail.com");
 
         when(produtosRepository.findById(1L)).thenReturn(Optional.of(produtoAntigo));
         when(produtosRepository.save(any(ProdutosModel.class))).thenReturn(produtoAlterado);
 
-        ProdutosModel resultado = produtosService.alterar(1L, produtoAlterado,estoqueFactory);
+        ProdutosModel resultado = produtosService.alterar(1L, produtoAlterado);
 
         verify(produtosRepository,times(1)).findById(1L);
         verify(produtosRepository, times(1)).save(any(ProdutosModel.class));

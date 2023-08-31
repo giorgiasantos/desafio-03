@@ -1,15 +1,17 @@
 package com.example.catalisa.desafio3.controller;
 
+
+import com.example.catalisa.desafio3.mapper.ProdutosMapper;
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTOView;
-import com.example.catalisa.desafio3.model.factory.EstoqueFactory;
 import com.example.catalisa.desafio3.service.ProdutosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +19,6 @@ import java.util.Optional;
 @RequestMapping(path = "/api/produtos")
 
 public class ProdutosController {
-
     @Autowired
     private ProdutosService produtosService;
 
@@ -50,16 +51,19 @@ public class ProdutosController {
     }
     //ENDPOINT POST
     @PostMapping
-    public ResponseEntity<ProdutosDTO> cadastrarProduto(@RequestBody ProdutosDTO produtosDTO, EstoqueFactory estoqueFactory){
-        ProdutosDTO novoProduto = produtosService.cadastrar(produtosDTO, estoqueFactory);
-        return ResponseEntity.ok().body(novoProduto);
+    public ResponseEntity<String> cadastrarProduto(@RequestBody ProdutosDTO produtosDTO) {
+
+        ProdutosModel novoProdutoModel = ProdutosMapper.INSTANCE.produtosDTOToProdutosModel(produtosDTO);
+        ProdutosDTO novoProdutoDTO = produtosService.cadastrar(new ProdutosDTO(novoProdutoModel));
+
+        return ResponseEntity.ok("Produto cadastrado com sucesso.");
     }
 
     //ENDPOINT PUT
     @PutMapping(path = "/{id}")
-    public ResponseEntity<ProdutosModel> alterarProduto(@PathVariable Long id, @RequestBody ProdutosModel produtosModel, EstoqueFactory estoqueFactory){
+    public ResponseEntity<ProdutosModel> alterarProduto(@PathVariable Long id, @RequestBody ProdutosModel produtosModel){
 
-        ProdutosModel produtoAlterado = produtosService.alterar(id,produtosModel,estoqueFactory);
+        ProdutosModel produtoAlterado = produtosService.alterar(id,produtosModel);
 
         if(produtoAlterado != null){
             return ResponseEntity.ok().body(produtoAlterado);

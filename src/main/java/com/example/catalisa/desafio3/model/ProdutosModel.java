@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -19,7 +20,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 
 public class ProdutosModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,19 +27,15 @@ public class ProdutosModel {
     @Column(length = 200, nullable = false)
     private String nomeProduto;
 
-    @Column(length = 200, nullable = false)
+   @Column(length = 200, nullable = false)
     private String descricao;
 
     @Column(length = 6, nullable = false)
     private String tipoPedido;
 
-    @Positive
-    @Column(nullable = false)
-    private int quantidadeOperacao;
-
     @PositiveOrZero
-    @Column(length = 10, nullable = false)
-    private int quantidadeEstoque;
+    @Column(nullable = false)
+    private int qtdProduto;
 
     @Positive
     @Column(length = 6, nullable = false)
@@ -48,6 +44,15 @@ public class ProdutosModel {
     @PastOrPresent
     @Column(length = 10, nullable = false)
     private LocalDate dataRegistro;
+
+    @Column(length = 200, nullable = false)
+    private String nomeResponsavel;
+
+    @Email
+    private String emailResponsavel;
+
+    public ProdutosModel(ProdutosModel produtosModel) {
+    }
 
 
 }

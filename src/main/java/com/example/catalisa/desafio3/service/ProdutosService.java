@@ -1,9 +1,10 @@
 package com.example.catalisa.desafio3.service;
 
+
+import com.example.catalisa.desafio3.mapper.ProdutosMapper;
 import com.example.catalisa.desafio3.model.ProdutosModel;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTO;
 import com.example.catalisa.desafio3.model.dto.ProdutosDTOView;
-import com.example.catalisa.desafio3.model.factory.EstoqueFactory;
 import com.example.catalisa.desafio3.repository.ProdutosRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,19 +59,16 @@ public class ProdutosService {
     }
 
     // CADASTRAR UM PRODUTO
-    public ProdutosDTO cadastrar(ProdutosDTO produtosDTO, EstoqueFactory estoqueFactory){
+    public ProdutosDTO cadastrar(ProdutosDTO produtosDTO){
 
-        ProdutosModel novoProduto = produtosRepository.save(produtosDTO.toProdutosModel());
-
-        int quantidadeEstoque = estoqueFactory.operacao(novoProduto.getTipoPedido())
-                .calcularEstoque(novoProduto.getQuantidadeEstoque(),novoProduto.getQuantidadeOperacao());
-        novoProduto.setQuantidadeEstoque(quantidadeEstoque);
+        ProdutosModel novoProduto = ProdutosMapper.INSTANCE.produtosDTOToProdutosModel(produtosDTO);
+        produtosRepository.save(novoProduto);
 
         return new ProdutosDTO(novoProduto);
     }
 
     // ATUALIZAR UM PRODUTO JÁ CADASTRADO
-    public ProdutosModel alterar(Long id, ProdutosModel produtosModel, EstoqueFactory estoqueFactory){
+    public ProdutosModel alterar(Long id, ProdutosModel produtosModel){
 
         ProdutosModel produto = produtosRepository.findById(id).get();
 
@@ -78,22 +76,7 @@ public class ProdutosService {
             produto.setNomeProduto(produtosModel.getNomeProduto());
         }
         if(produto != null){
-            produto.setDataRegistro(produtosModel.getDataRegistro());
-        }
-        if(produto != null){
             produto.setValor(produtosModel.getValor());
-        }
-        if(produto != null){
-            produto.setQuantidadeEstoque(produtosModel.getQuantidadeEstoque());
-        }
-        if(produto != null){
-            produto.setQuantidadeOperacao(produtosModel.getQuantidadeOperacao());
-        }
-        if(produto != null){
-            produto.setTipoPedido(produtosModel.getTipoPedido());
-            int qtdeEstoque = estoqueFactory.operacao(produtosModel.getTipoPedido())
-                    .calcularEstoque(produtosModel.getQuantidadeEstoque(),produtosModel.getQuantidadeOperacao());
-            produto.setQuantidadeEstoque(qtdeEstoque);
         }
         if(produto != null){
             produto.setDescricao(produtosModel.getDescricao());
