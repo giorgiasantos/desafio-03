@@ -3,7 +3,7 @@
 
 API REST de CRUD com requisições de GET, POST, PUT e DELETE no banco de dados.
 
-## Features
+## 💻 Features 💻
 
 - [x] Conexão com banco de dados H2;
 - [x] Endpoits POST, GET, PUT e DELETE;
@@ -16,3 +16,14 @@ API REST de CRUD com requisições de GET, POST, PUT e DELETE no banco de dados.
 - [x] DTOs para criação de um novo produto e para exibição do produto;
 - [x] Documentação da API feita com Swagger. Disponível no arquivo [openapi.yaml](https://github.com/giorgiasantos/desafio-03/blob/main/openapi.yaml);
 - [x] Cobertura de testes: classes (100%), métodos(73%), linhas (72%).       
+
+### ✨ Ferramentas ✨
+
+- Jdk 11;
+- Spring Framewoek;
+- H2 Database;
+- PostMan;
+- JUnit;
+- Mockito;
+- Map Struct;
+- Jackson Core;
