@@ -1,0 +1,260 @@
+---
+openapi: 3.0.1
+info:
+  title: API para gerenciamento de estoque
+  description: Api para gerenciamento de produtos de um estoque
+  version: '1'
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  "/api/produtos/{id}":
+    put:
+      tags:
+      - produtos
+      summary: 'Altera um produto já criado. É possível mudar nome, descrição e valor. '
+      operationId: alterarProduto
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProdutosModel"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ProdutosModel"
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+    delete:
+      tags:
+      - produtos
+      summary: 'Exclui um produto. '
+      operationId: deletarProduto
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/produtos":
+    get:
+      tags:
+      - produtos
+      summary: Busca todos os produtos
+      operationId: listarProdutos
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ProdutosDTOView"
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+    post:
+      tags:
+      - produtos
+      summary: 'Cria um novo produto no sistema. '
+      operationId: cadastrarProduto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ProdutosDTO"
+        required: true
+      responses:
+        '200':
+          description: Produto cadastrado com sucesso.
+          content:
+            "*/*":
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/produtos/buscaNome/{nomeProduto}":
+    get:
+      tags:
+      - produtos
+      summary: 'Busca um produto pelo nome. '
+      operationId: buscarProdutoPorNome
+      parameters:
+      - name: nomeProduto
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+  "/api/produtos/buscaId/{id}":
+    get:
+      tags:
+      - produtos
+      summary: 'Busca um produto por id. '
+      operationId: buscarProdutoPorId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            "*/*":
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+components:
+  schemas:
+    ProdutosModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nomeProduto:
+          type: string
+        descricao:
+          type: string
+        tipoPedido:
+          type: string
+        qtdProduto:
+          type: integer
+          format: int32
+        valor:
+          type: number
+          format: double
+        dataRegistro:
+          type: string
+          format: date
+        nomeResponsavel:
+          type: string
+        emailResponsavel:
+          type: string
+    ProdutosDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nomeProduto:
+          type: string
+        descricao:
+          type: string
+        tipoPedido:
+          type: string
+        qtdProduto:
+          type: integer
+          format: int32
+        valor:
+          type: number
+          format: double
+        dataRegistro:
+          type: string
+          format: date
+        nomeResponsavel:
+          type: string
+        emailResponsavel:
+          type: string
+    ProdutosDTOView:
+      type: object
+      properties:
+        nomeProduto:
+          type: string
+        tipoPedido:
+          type: string
+        valor:
+          type: number
+          format: double
+        dataRegistro:
+          type: string
+          format: date

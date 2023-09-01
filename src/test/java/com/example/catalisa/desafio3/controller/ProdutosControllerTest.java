@@ -118,28 +118,6 @@ class ProdutosControllerTest {
                 .andExpect(content().string("Produto cadastrado com sucesso."));
     }
 
-//    @Test
-//    @Disabled
-//    void testeCadastrarProduto() throws Exception{
-//
-//        ProdutosModel produtosModel = new ProdutosModel(1L,"Jaqueta Jeans", "Jaquela jeans em modelagem oversized com bolsos laterais","Compra",10, 80.0, LocalDate.parse("2023-06-06"), "Alfajor","alfajor@gmail.com");
-//
-//        String jsonContent = objectMapper.writeValueAsString(produtosModel);
-//
-//        mockMvc.perform(post("/api/produtos")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(jsonContent))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(1))
-//                .andExpect(jsonPath("$.nomeProduto").value("Jaqueta Jeans"))
-//                .andExpect(jsonPath("$.descricao").value("Jaquela jeans em modelagem oversized com bolsos laterais"))
-//                .andExpect(jsonPath("$.tipoPedido").value("Compra"))
-//                .andExpect(jsonPath("$.qtdProduto").value(10))
-//                .andExpect(jsonPath("$.valor").value(80.0))
-//                .andExpect(jsonPath("$.dataRegistro").value("2023-06-06"))
-//                .andExpect(jsonPath("$.nomeResponsavel").value("Alfajor"))
-//                .andExpect(jsonPath("$.emailResponsavel").value("alfajor@gmail.com"));
-//    }
 
     @Test
     void testeAlterarProduto() throws Exception{
